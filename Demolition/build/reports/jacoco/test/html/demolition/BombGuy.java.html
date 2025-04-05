@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BombGuy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">BombGuy.java</span></div><h1>BombGuy.java</h1><pre class="source lang-java linenums">package demolition;
+
+import processing.core.*;
+import processing.data.*;
+import java.io.*;
+import java.util.*;
+import java.math.*;
+
+public class BombGuy extends Guy{
+<span class="pc" id="L10">    public boolean putBomb = false;</span>
+    
+<span class="fc" id="L12">    public BombGuy(){</span>
+<span class="fc" id="L13">    }</span>
+
+    public BombGuy(int x, int y){
+<span class="nc" id="L16">        super(x, y);</span>
+<span class="nc" id="L17">    }</span>
+
+    public void direction(App app){
+        //Default
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (app.count == 1){</span>
+<span class="fc" id="L22">            this.sprite1 = this.spriteDown1;</span>
+<span class="fc" id="L23">            this.sprite2 = this.spriteDown2;</span>
+<span class="fc" id="L24">            this.sprite3 = this.spriteDown3;</span>
+<span class="fc" id="L25">            this.sprite4 = this.spriteDown4;</span>
+        }
+
+        //Determine the direction of the bombGuy
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (app.reset == true){</span>
+<span class="fc" id="L30">            this.sprite1 = this.spriteDown1;</span>
+<span class="fc" id="L31">            this.sprite2 = this.spriteDown2;</span>
+<span class="fc" id="L32">            this.sprite3 = this.spriteDown3;</span>
+<span class="fc" id="L33">            this.sprite4 = this.spriteDown4;</span>
+<span class="fc" id="L34">            this.moveDown = false;</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        }else if (this.moveDown == true){</span>
+<span class="fc" id="L36">            this.sprite1 = this.spriteDown1;</span>
+<span class="fc" id="L37">            this.sprite2 = this.spriteDown2;</span>
+<span class="fc" id="L38">            this.sprite3 = this.spriteDown3;</span>
+<span class="fc" id="L39">            this.sprite4 = this.spriteDown4;</span>
+<span class="fc" id="L40">            this.moveDown = false;</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        }else if (this.moveUp == true){</span>
+<span class="fc" id="L42">            this.sprite1 = this.spriteUp1;</span>
+<span class="fc" id="L43">            this.sprite2 = this.spriteUp2;</span>
+<span class="fc" id="L44">            this.sprite3 = this.spriteUp3;</span>
+<span class="fc" id="L45">            this.sprite4 = this.spriteUp4;</span>
+<span class="fc" id="L46">            this.moveUp = false;</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        }else if (this.moveLeft == true){</span>
+<span class="fc" id="L48">            this.sprite1 = this.spriteLeft1;</span>
+<span class="fc" id="L49">            this.sprite2 = this.spriteLeft2;</span>
+<span class="fc" id="L50">            this.sprite3 = this.spriteLeft3;</span>
+<span class="fc" id="L51">            this.sprite4 = this.spriteLeft4;</span>
+<span class="fc" id="L52">            this.moveLeft = false;</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        }else if (this.moveRight == true){</span>
+<span class="fc" id="L54">            this.sprite1 = this.spriteRight1;</span>
+<span class="fc" id="L55">            this.sprite2 = this.spriteRight2;</span>
+<span class="fc" id="L56">            this.sprite3 = this.spriteRight3;</span>
+<span class="fc" id="L57">            this.sprite4 = this.spriteRight4;</span>
+<span class="fc" id="L58">            this.moveRight = false;</span>
+        }
+<span class="fc" id="L60">    }</span>
+
+    public void tick(App app){
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (this.canMove){</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            if (this.moveLeft){</span>
+<span class="fc" id="L65">                this.x -= 32;</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">            }else if (this.moveRight){</span>
+<span class="fc" id="L67">                this.x += 32;</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">            }else if (this.moveDown){</span>
+<span class="fc" id="L69">                this.y += 32;</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">            }else if (this.moveUp){</span>
+<span class="fc" id="L71">                this.y -= 32;</span>
+            }
+        }else{
+<span class="fc" id="L74">            this.canMove = true;</span>
+        }
+<span class="fc" id="L76">    }</span>
+
+    public void reachGoal(App app){
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        for (int i = 0; i &lt; app.loadConfig.goalTileList.size(); i ++){</span>
+<span class="fc" id="L80">            int row = (int) Math.floor(app.loadConfig.goalTileList.get(i)/15);</span>
+<span class="fc" id="L81">            int yGoal = 48 + row * 32;</span>
+<span class="fc" id="L82">            int column = (int) app.loadConfig.goalTileList.get(i) % 15;</span>
+<span class="fc" id="L83">            int xGoal = column * 32;</span>
+<span class="pc bpc" id="L84" title="1 of 4 branches missed.">            if (this.getX() == xGoal &amp;&amp; this.getY() == yGoal){</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">                if (app.loadConfig.level == 1){</span>
+<span class="fc" id="L86">                    app.loadConfig.level = 2;</span>
+<span class="fc" id="L87">                    app.loadConfig.nextLevel = true;</span>
+                }else{
+<span class="fc" id="L89">                    app.loadConfig.gameWin = true;</span>
+                }
+            }
+        }
+<span class="fc" id="L93">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

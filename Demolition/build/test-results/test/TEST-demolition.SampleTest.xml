@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="demolition.SampleTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2021-11-04T04:50:41" hostname="CHARLOTTE559" time="48.086">
+  <properties/>
+  <testcase name="basicTestExplosionALL()" classname="demolition.SampleTest" time="3.693"/>
+  <testcase name="simpleTest()" classname="demolition.SampleTest" time="0.002"/>
+  <testcase name="basicTestExplosionSolidWall()" classname="demolition.SampleTest" time="1.555"/>
+  <testcase name="basicTestExplosionBrokenWall()" classname="demolition.SampleTest" time="1.994"/>
+  <testcase name="basicTestGameWIN()" classname="demolition.SampleTest" time="12.289"/>
+  <testcase name="basicTestGameLOSE1()" classname="demolition.SampleTest" time="4.441"/>
+  <testcase name="basicTestGameLOSE2()" classname="demolition.SampleTest" time="2.202"/>
+  <testcase name="basicTestActionEnemies()" classname="demolition.SampleTest" time="6.438"/>
+  <testcase name="basicTestLoadLevel2()" classname="demolition.SampleTest" time="4.439"/>
+  <testcase name="basicTestKillEnemy()" classname="demolition.SampleTest" time="2.806"/>
+  <testcase name="basicTestBomb()" classname="demolition.SampleTest" time="2.055"/>
+  <testcase name="basicTestMove()" classname="demolition.SampleTest" time="1.386"/>
+  <testcase name="basicTestMeetEnemy()" classname="demolition.SampleTest" time="4.782"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

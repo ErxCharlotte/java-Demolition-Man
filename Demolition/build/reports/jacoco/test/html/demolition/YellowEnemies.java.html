@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>YellowEnemies.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">YellowEnemies.java</span></div><h1>YellowEnemies.java</h1><pre class="source lang-java linenums">package demolition;
+
+import processing.core.*;
+import processing.data.*;
+import java.io.*;
+import java.util.*;
+import java.math.*;
+
+public class YellowEnemies extends Enemies{
+    
+<span class="nc" id="L11">    public YellowEnemies(){</span>
+<span class="nc" id="L12">    }</span>
+
+    public YellowEnemies(int x, int y){
+<span class="fc" id="L15">        super(x, y);</span>
+<span class="fc" id="L16">    }</span>
+
+    public void turnDirection(){
+<span class="fc bfc" id="L19" title="All 2 branches covered.">        if (this.enemyMoveDown){</span>
+<span class="fc" id="L20">            this.enemyMoveLeft = true;</span>
+<span class="fc" id="L21">            this.enemyMoveDown = false;</span>
+<span class="fc bfc" id="L22" title="All 2 branches covered.">        }else if (this.enemyMoveLeft){</span>
+<span class="fc" id="L23">            this.enemyMoveUp = true;</span>
+<span class="fc" id="L24">            this.enemyMoveLeft = false;</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        }else if (this.enemyMoveUp){</span>
+<span class="fc" id="L26">            this.enemyMoveRight = true;</span>
+<span class="fc" id="L27">            this.enemyMoveUp = false;</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        }else if (this.enemyMoveRight){</span>
+<span class="fc" id="L29">            this.enemyMoveDown = true;</span>
+<span class="fc" id="L30">            this.enemyMoveRight = false;</span>
+        }
+<span class="fc" id="L32">    }</span>
+
+    public void enemiesCanMove(App app){
+<span class="fc" id="L35">        ArrayList&lt;String&gt; mapList = app.mapList;</span>
+<span class="fc" id="L36">        int nextX = this.getX();</span>
+<span class="fc" id="L37">        int nextY = this.getY();</span>
+        
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (this.enemyMoveLeft){</span>
+<span class="fc" id="L40">            nextX = this.getX() - 32;</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        }else if (this.enemyMoveRight){</span>
+<span class="fc" id="L42">            nextX = this.getX() + 32;</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        }else if (this.enemyMoveDown){</span>
+<span class="fc" id="L44">            nextY = this.getY() + 32;</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        }else if (this.enemyMoveUp){</span>
+<span class="fc" id="L46">            nextY = this.getY() - 32;</span>
+        }
+
+        //Solid Wall
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (int i = 0; i &lt; mapList.size(); i++){</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">            if (mapList.get(i).equals(&quot;W&quot;)){</span>
+<span class="fc" id="L52">                int row = (int) Math.floor(i/15);</span>
+<span class="fc" id="L53">                int wallY = 48 + row * 32;</span>
+<span class="fc" id="L54">                int column = (int) i % 15;</span>
+<span class="fc" id="L55">                int wallX = column * 32;</span>
+<span class="fc bfc" id="L56" title="All 4 branches covered.">                if (nextX == wallX &amp;&amp; nextY == wallY){</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">                    if (app.count % 60 == 0){</span>
+<span class="fc" id="L58">                        this.turnDirection();</span>
+<span class="fc" id="L59">                        this.enemiesCanMove(app);</span>
+                    }
+                }
+            }
+        }
+
+        //Broken Wall
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        for (int u = 0; u &lt; app.loadConfig.brokenWallList.size(); u ++){</span>
+<span class="fc" id="L67">            int index = app.loadConfig.brokenWallList.get(u);</span>
+<span class="fc" id="L68">            int row = (int) Math.floor(index/15);</span>
+<span class="fc" id="L69">            int wallY = 48 + row * 32;</span>
+<span class="fc" id="L70">            int column = (int) index % 15;</span>
+<span class="fc" id="L71">            int wallX = column * 32;</span>
+<span class="fc bfc" id="L72" title="All 4 branches covered.">            if (nextX == wallX &amp;&amp; nextY == wallY){</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">                if (app.count % 60 == 0){</span>
+<span class="fc" id="L74">                    this.turnDirection();</span>
+<span class="fc" id="L75">                    this.enemiesCanMove(app);</span>
+                }
+                
+            }
+        }
+<span class="fc" id="L80">    }</span>
+
+    public void direction(App app){
+        //Default
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (app.count == 1){</span>
+<span class="fc" id="L85">            this.sprite1 = app.loadConfig.down1YELLOW;</span>
+<span class="fc" id="L86">            this.sprite2 = app.loadConfig.down2YELLOW;</span>
+<span class="fc" id="L87">            this.sprite3 = app.loadConfig.down3YELLOW;</span>
+<span class="fc" id="L88">            this.sprite4 = app.loadConfig.down4YELLOW;</span>
+        }
+
+        //Determine the direction of the bombGuy
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (this.enemyMoveDown == true){</span>
+<span class="fc" id="L93">            this.sprite1 = app.loadConfig.down1YELLOW;</span>
+<span class="fc" id="L94">            this.sprite2 = app.loadConfig.down2YELLOW;</span>
+<span class="fc" id="L95">            this.sprite3 = app.loadConfig.down3YELLOW;</span>
+<span class="fc" id="L96">            this.sprite4 = app.loadConfig.down4YELLOW;</span>
+            //this.enemyMoveDown = false;
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        }else if (this.enemyMoveUp == true){</span>
+<span class="fc" id="L99">            this.sprite1 = app.loadConfig.up1YELLOW;</span>
+<span class="fc" id="L100">            this.sprite2 = app.loadConfig.up2YELLOW;</span>
+<span class="fc" id="L101">            this.sprite3 = app.loadConfig.up3YELLOW;</span>
+<span class="fc" id="L102">            this.sprite4 = app.loadConfig.up4YELLOW;</span>
+            //this.enemyMoveUp = false;
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        }else if (this.enemyMoveLeft == true){</span>
+<span class="fc" id="L105">            this.sprite1 = app.loadConfig.left1YELLOW;</span>
+<span class="fc" id="L106">            this.sprite2 = app.loadConfig.left2YELLOW;</span>
+<span class="fc" id="L107">            this.sprite3 = app.loadConfig.left3YELLOW;</span>
+<span class="fc" id="L108">            this.sprite4 = app.loadConfig.left4YELLOW;</span>
+            //this.enemyMoveLeft = false;
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        }else if (this.enemyMoveRight == true){</span>
+<span class="fc" id="L111">            this.sprite1 = app.loadConfig.right1YELLOW;</span>
+<span class="fc" id="L112">            this.sprite2 = app.loadConfig.right2YELLOW;</span>
+<span class="fc" id="L113">            this.sprite3 = app.loadConfig.right3YELLOW;</span>
+<span class="fc" id="L114">            this.sprite4 = app.loadConfig.right4YELLOW;</span>
+            //this.enemyMoveRight = false;
+        }
+<span class="fc" id="L117">    }</span>
+
+    public void removeEnemy(App app){
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (this.beKilled){</span>
+<span class="fc" id="L121">            app.loadConfig.yellowEnemiesList.remove(this);</span>
+        }
+<span class="fc" id="L123">    }</span>
+
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

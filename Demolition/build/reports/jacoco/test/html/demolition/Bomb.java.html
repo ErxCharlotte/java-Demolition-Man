@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Bomb.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">Bomb.java</span></div><h1>Bomb.java</h1><pre class="source lang-java linenums">package demolition;
+
+import processing.core.*;
+import processing.data.*;
+import java.io.*;
+import java.util.*;
+import java.math.*;
+
+public class Bomb{
+    protected int x;
+    protected int y;
+    public int top1Y;
+    public int top2Y;
+    public int bottom1Y;
+    public int bottom2Y;
+    public int left1X;
+    public int left2X;
+    public int right1X;
+    public int right2X;
+
+
+<span class="pc" id="L22">    private double timer = 0.0;</span>
+<span class="pc" id="L23">    public double period = 60.0;</span>
+    public int frameStart;
+
+    public PImage sprite;
+    public PImage sprite1;
+    public PImage sprite2;
+    public PImage sprite3;
+    public PImage sprite4;
+    public PImage sprite5;
+    public PImage sprite6;
+    public PImage sprite7;
+    public PImage sprite8;
+
+    public PImage explosionCentreSprite;
+    public PImage explosionBottomSprite;
+    public PImage explosionLeftSprite;
+    public PImage explosionRightSprite;
+    public PImage explosionTopSprite;
+    public PImage explosionHorizontalSprite;
+    public PImage explosionVerticalSprite;
+
+<span class="pc" id="L44">    public boolean explosion = false;</span>
+<span class="pc" id="L45">    public boolean top1Wall = false;</span>
+<span class="pc" id="L46">    public boolean top2Wall = false;</span>
+<span class="pc" id="L47">    public boolean bottom1Wall = false;</span>
+<span class="pc" id="L48">    public boolean bottom2Wall = false;</span>
+<span class="pc" id="L49">    public boolean left1Wall = false;</span>
+<span class="pc" id="L50">    public boolean left2Wall = false;</span>
+<span class="pc" id="L51">    public boolean right1Wall = false;</span>
+<span class="pc" id="L52">    public boolean right2Wall = false;</span>
+
+<span class="pc" id="L54">    public boolean topBrokenWall = false;</span>
+<span class="pc" id="L55">    public boolean bottomBrokenWall = false;</span>
+<span class="pc" id="L56">    public boolean leftBrokenWall = false;</span>
+<span class="pc" id="L57">    public boolean rightBrokenWall = false;</span>
+
+<span class="pc" id="L59">    public ArrayList&lt;Integer&gt; removeBrokenWallList = new ArrayList&lt;Integer&gt;();</span>
+<span class="pc" id="L60">    public ArrayList&lt;Integer&gt; locationX = new ArrayList&lt;Integer&gt;();</span>
+<span class="pc" id="L61">    public ArrayList&lt;Integer&gt; locationY = new ArrayList&lt;Integer&gt;();</span>
+
+<span class="nc" id="L63">    public Bomb(){</span>
+<span class="nc" id="L64">    }</span>
+
+<span class="fc" id="L66">    public Bomb(int x, int y){</span>
+<span class="fc" id="L67">        this.x = x;</span>
+<span class="fc" id="L68">        this.y = y;</span>
+<span class="fc" id="L69">    }</span>
+
+    public void setSprite(App app){
+<span class="fc" id="L72">        this.sprite1 = app.loadConfig.bombSprite1;</span>
+<span class="fc" id="L73">        this.sprite2 = app.loadConfig.bombSprite2;</span>
+<span class="fc" id="L74">        this.sprite3 = app.loadConfig.bombSprite3;</span>
+<span class="fc" id="L75">        this.sprite4 = app.loadConfig.bombSprite4;</span>
+<span class="fc" id="L76">        this.sprite5 = app.loadConfig.bombSprite5;</span>
+<span class="fc" id="L77">        this.sprite6 = app.loadConfig.bombSprite6;</span>
+<span class="fc" id="L78">        this.sprite7 = app.loadConfig.bombSprite7;</span>
+<span class="fc" id="L79">        this.sprite8 = app.loadConfig.bombSprite8;</span>
+<span class="fc" id="L80">        this.explosionCentreSprite = app.loadConfig.explosionCentreSprite;</span>
+<span class="fc" id="L81">        this.explosionBottomSprite = app.loadConfig.explosionBottomSprite;</span>
+<span class="fc" id="L82">        this.explosionLeftSprite = app.loadConfig.explosionLeftSprite;</span>
+<span class="fc" id="L83">        this.explosionRightSprite = app.loadConfig.explosionRightSprite;</span>
+<span class="fc" id="L84">        this.explosionTopSprite = app.loadConfig.explosionTopSprite;</span>
+<span class="fc" id="L85">        this.explosionHorizontalSprite = app.loadConfig.explosionHorizontalSprite;</span>
+<span class="fc" id="L86">        this.explosionVerticalSprite = app.loadConfig.explosionVerticalSprite;</span>
+<span class="fc" id="L87">    }</span>
+
+    //Determine whether have a solid wall
+    public void haveWall(App app){
+<span class="fc" id="L91">        int top1Y = this.getY() - 64;</span>
+<span class="fc" id="L92">        int top2Y = this.getY() - 32;</span>
+<span class="fc" id="L93">        int bottom1Y = this.getY() + 64;</span>
+<span class="fc" id="L94">        int bottom2Y = this.getY() + 32;</span>
+<span class="fc" id="L95">        int right1X = this.getX() + 64;</span>
+<span class="fc" id="L96">        int right2X = this.getX() + 32;</span>
+<span class="fc" id="L97">        int left1X = this.getX() - 64;</span>
+<span class="fc" id="L98">        int left2X = this.getX() - 32;</span>
+
+<span class="fc" id="L100">        ArrayList&lt;Integer&gt; solidWallList = app.loadConfig.solidWallList;</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        for (int i = 0; i &lt; solidWallList.size(); i++){</span>
+<span class="fc" id="L102">                int row = (int) Math.floor(solidWallList.get(i)/15);</span>
+<span class="fc" id="L103">                int wallY = 48 + row * 32;</span>
+<span class="fc" id="L104">                int column = (int) solidWallList.get(i) % 15;</span>
+<span class="fc" id="L105">                int wallX = column * 32;</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">                if (this.getX() == wallX){</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">                    if (top1Y == wallY){</span>
+<span class="fc" id="L108">                        this.top1Wall = true;</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">                    }else if (top2Y == wallY){</span>
+<span class="fc" id="L110">                        this.top2Wall = true;</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">                    }else if (bottom1Y == wallY){</span>
+<span class="fc" id="L112">                        this.bottom1Wall = true;</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">                    }else if (bottom2Y == wallY){</span>
+<span class="fc" id="L114">                        this.bottom2Wall = true;</span>
+                    }
+<span class="fc bfc" id="L116" title="All 2 branches covered.">                }else if (this.getY() == wallY){</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">                    if (left1X == wallX){</span>
+<span class="fc" id="L118">                        this.left1Wall = true;</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">                    }else if (left2X == wallX){</span>
+<span class="fc" id="L120">                        this.left2Wall = true;</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">                    }else if (right1X == wallX){</span>
+<span class="fc" id="L122">                        this.right1Wall = true;</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">                    }else if (right2X == wallX){</span>
+<span class="fc" id="L124">                        this.right2Wall = true;</span>
+                    }
+                }
+        }
+
+<span class="fc" id="L129">        ArrayList&lt;Integer&gt; brokenWallList = app.loadConfig.brokenWallList;</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        for (int u = 0; u &lt; brokenWallList.size(); u++){</span>
+<span class="fc" id="L131">                int row = (int) Math.floor(brokenWallList.get(u)/15);</span>
+<span class="fc" id="L132">                int wallY = 48 + row * 32;</span>
+<span class="fc" id="L133">                int column = (int) brokenWallList.get(u) % 15;</span>
+<span class="fc" id="L134">                int wallX = column * 32;</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">                if (this.getX() == wallX){</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">                    if (top2Y == wallY){</span>
+<span class="fc" id="L137">                        this.topBrokenWall = true;</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">                    }else if (bottom2Y == wallY){</span>
+<span class="fc" id="L139">                        this.bottomBrokenWall = true;</span>
+                    }
+<span class="fc bfc" id="L141" title="All 2 branches covered.">                }else if (this.getY() == wallY){</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">                    if (left2X == wallX){</span>
+<span class="fc" id="L143">                        this.leftBrokenWall = true;</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">                    }else if (right2X == wallX){</span>
+<span class="fc" id="L145">                        this.rightBrokenWall = true;</span>
+                    }
+                }
+            }
+<span class="fc" id="L149">    }</span>
+
+    //Load the list about the range of the explosion's location.
+    public ArrayList&lt;ArrayList&gt; loadLocation(App app){
+<span class="fc" id="L153">        ArrayList&lt;ArrayList&gt; location = new ArrayList&lt;ArrayList&gt;();</span>
+<span class="fc" id="L154">        ArrayList&lt;Integer&gt; locationX = new ArrayList&lt;Integer&gt;();</span>
+<span class="fc" id="L155">        ArrayList&lt;Integer&gt; locationY = new ArrayList&lt;Integer&gt;();</span>
+
+        //Load the range of the explosion
+<span class="fc" id="L158">        this.top1Y = this.getY() - 64;</span>
+<span class="fc" id="L159">        this.top2Y = this.getY() - 32;</span>
+<span class="fc" id="L160">        this.bottom1Y = this.getY() + 64;</span>
+<span class="fc" id="L161">        this.bottom2Y = this.getY() + 32;</span>
+<span class="fc" id="L162">        this.left1X = this.getX() - 64;</span>
+<span class="fc" id="L163">        this.left2X = this.getX() - 32;</span>
+<span class="fc" id="L164">        this.right1X = this.getX() + 64;</span>
+<span class="fc" id="L165">        this.right2X = this.getX() + 32;</span>
+
+<span class="fc" id="L167">        locationX.add(this.getX());</span>
+<span class="fc" id="L168">        locationY.add(this.getY());</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">        for (int p = 0; p &lt; 4; p ++){</span>
+<span class="fc" id="L170">            locationX.add(this.getX());</span>
+        }
+<span class="fc" id="L172">        locationY.add(this.top1Y);</span>
+<span class="fc" id="L173">        locationY.add(this.top2Y);</span>
+<span class="fc" id="L174">        locationY.add(this.bottom1Y);</span>
+<span class="fc" id="L175">        locationY.add(this.bottom2Y);</span>
+
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        for (int i = 0; i &lt; 4; i ++){</span>
+<span class="fc" id="L178">            locationY.add(this.getY());</span>
+        }
+<span class="fc" id="L180">        locationX.add(this.left1X);</span>
+<span class="fc" id="L181">        locationX.add(this.left2X);</span>
+<span class="fc" id="L182">        locationX.add(this.right1X);</span>
+<span class="fc" id="L183">        locationX.add(this.right2X);</span>
+
+<span class="fc bfc" id="L185" title="All 2 branches covered.">        if (this.top2Wall == true){</span>
+<span class="fc" id="L186">            locationY.remove(Integer.valueOf(this.top1Y));</span>
+<span class="fc" id="L187">            locationY.remove(Integer.valueOf(this.top2Y));</span>
+<span class="fc" id="L188">            locationX.remove(Integer.valueOf(this.getX()));</span>
+<span class="fc" id="L189">            locationX.remove(Integer.valueOf(this.getX()));</span>
+        }
+<span class="fc bfc" id="L191" title="All 2 branches covered.">        if (this.bottom2Wall == true){</span>
+<span class="fc" id="L192">            locationY.remove(Integer.valueOf(this.bottom1Y));</span>
+<span class="fc" id="L193">            locationY.remove(Integer.valueOf(this.bottom2Y));</span>
+<span class="fc" id="L194">            locationX.remove(Integer.valueOf(this.getX()));</span>
+<span class="fc" id="L195">            locationX.remove(Integer.valueOf(this.getX()));</span>
+        }
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        if (this.left2Wall == true){</span>
+<span class="fc" id="L198">            locationX.remove(Integer.valueOf(this.left1X));</span>
+<span class="fc" id="L199">            locationX.remove(Integer.valueOf(this.left2X));</span>
+<span class="fc" id="L200">            locationY.remove(Integer.valueOf(this.getY()));</span>
+<span class="fc" id="L201">            locationY.remove(Integer.valueOf(this.getY()));</span>
+        }
+<span class="fc bfc" id="L203" title="All 2 branches covered.">        if (this.right2Wall == true){</span>
+<span class="fc" id="L204">            locationX.remove(Integer.valueOf(this.right1X));</span>
+<span class="fc" id="L205">            locationX.remove(Integer.valueOf(this.right2X));</span>
+<span class="fc" id="L206">            locationY.remove(Integer.valueOf(this.getY()));</span>
+<span class="fc" id="L207">            locationY.remove(Integer.valueOf(this.getY()));</span>
+        }
+
+        //Broken Wall
+<span class="fc bfc" id="L211" title="All 2 branches covered.">        if (this.topBrokenWall == true){</span>
+<span class="fc" id="L212">            locationY.remove(Integer.valueOf(this.top1Y));</span>
+<span class="fc" id="L213">            locationX.remove(Integer.valueOf(this.getX()));</span>
+        }
+<span class="fc bfc" id="L215" title="All 2 branches covered.">        if (this.bottomBrokenWall == true){</span>
+<span class="fc" id="L216">            locationY.remove(Integer.valueOf(this.bottom1Y));</span>
+<span class="fc" id="L217">            locationX.remove(Integer.valueOf(this.getX()));</span>
+        }
+<span class="fc bfc" id="L219" title="All 2 branches covered.">        if (this.leftBrokenWall == true){</span>
+<span class="fc" id="L220">            locationX.remove(Integer.valueOf(this.left1X));</span>
+<span class="fc" id="L221">            locationY.remove(Integer.valueOf(this.getY()));</span>
+        }
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        if (this.rightBrokenWall == true){</span>
+<span class="fc" id="L224">            locationX.remove(Integer.valueOf(this.right1X));</span>
+<span class="fc" id="L225">            locationY.remove(Integer.valueOf(this.getY()));</span>
+        }
+<span class="fc" id="L227">        location.add(locationX);</span>
+<span class="fc" id="L228">        location.add(locationY);</span>
+<span class="fc" id="L229">        return location;</span>
+    }
+
+    //Determine the range of the explosion
+    public void rangeExplosion(App app){
+<span class="fc" id="L234">        ArrayList&lt;ArrayList&gt; location = this.loadLocation(app);</span>
+<span class="fc" id="L235">        int count = app.count - this.frameStart;</span>
+        
+        //bombGuy
+<span class="fc bfc" id="L238" title="All 2 branches covered.">        if (count &gt;= 150){</span>
+            //System.out.println(location.get(0));
+            //System.out.println(location.get(1));
+<span class="fc bfc" id="L241" title="All 2 branches covered.">            for (int u = 0; u &lt; location.get(0).size(); u ++){</span>
+<span class="fc bfc" id="L242" title="All 4 branches covered.">                    if (app.bombGuy.getX() == (int) location.get(0).get(u) &amp;&amp; app.bombGuy.getY() == (int) location.get(1).get(u)){</span>
+<span class="fc" id="L243">                        app.loadConfig.loseLives = true;</span>
+                    }
+                }
+        }
+
+        //BrokenWall
+<span class="fc bfc" id="L249" title="All 2 branches covered.">        for (int i = 0; i &lt; app.loadConfig.brokenWallList.size(); i ++){</span>
+<span class="fc" id="L250">            int row = (int) Math.floor(app.loadConfig.brokenWallList.get(i)/15);</span>
+<span class="fc" id="L251">            int yBroken = 48 + row * 32;</span>
+<span class="fc" id="L252">            int column = (int) app.loadConfig.brokenWallList.get(i) % 15;</span>
+<span class="fc" id="L253">            int xBroken = column * 32;</span>
+            
+<span class="fc bfc" id="L255" title="All 2 branches covered.">            for (int t = 0; t &lt; location.get(0).size(); t ++){</span>
+<span class="fc bfc" id="L256" title="All 4 branches covered.">                if (xBroken == (int) location.get(0).get(t) &amp;&amp; yBroken == (int) location.get(1).get(t)){</span>
+<span class="fc" id="L257">                    this.removeBrokenWallList.add(app.loadConfig.brokenWallList.get(i));</span>
+                }
+            }
+        }
+<span class="fc" id="L261">    }</span>
+
+    public void drawBomb(App app){
+<span class="fc" id="L264">        this.timer ++;</span>
+<span class="fc" id="L265">        this.sprite = this.sprite1;</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">        if (this.timer &gt; 0.25 * app.FPS){</span>
+<span class="fc" id="L267">            int frameDirection = (int) Math.floor(app.count/15);</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">            if (frameDirection % 8 == 0) {</span>
+<span class="fc" id="L269">                this.x = this.x;</span>
+<span class="fc" id="L270">                this.sprite = this.sprite2;</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">            }else if (frameDirection % 8 == 1){</span>
+<span class="fc" id="L272">                this.x = this.x;</span>
+<span class="fc" id="L273">                this.sprite = this.sprite3;</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">            }else if (frameDirection % 8  == 2){</span>
+<span class="fc" id="L275">                this.x = this.x;</span>
+<span class="fc" id="L276">                this.sprite = this.sprite4;</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">            }else if (frameDirection % 8 == 3){</span>
+<span class="fc" id="L278">                this.x = this.x;</span>
+<span class="fc" id="L279">                this.sprite = this.sprite5;</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">            }else if (frameDirection % 8 == 4){</span>
+<span class="fc" id="L281">                this.x = this.x;</span>
+<span class="fc" id="L282">                this.sprite = this.sprite6;</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">            }else if (frameDirection % 8 == 5){</span>
+<span class="fc" id="L284">                this.x = this.x;</span>
+<span class="fc" id="L285">                this.sprite = this.sprite7;</span>
+<span class="fc bfc" id="L286" title="All 2 branches covered.">            }else if (frameDirection % 8 == 6){</span>
+<span class="fc" id="L287">                this.x = this.x;</span>
+<span class="fc" id="L288">                this.sprite = this.sprite8;</span>
+<span class="pc bpc" id="L289" title="1 of 2 branches missed.">            }else if (frameDirection % 8 == 7){</span>
+<span class="fc" id="L290">                this.x = this.x;</span>
+<span class="fc" id="L291">                this.sprite = this.sprite1;</span>
+            }
+        }
+<span class="fc" id="L294">    }</span>
+
+    public void drawExplosion(App app){
+<span class="nc" id="L297">    }</span>
+
+    public void draw(App app, PImage sprite){
+<span class="fc" id="L300">        app.image(sprite, this.x, this.y + 16, 32, 32);</span>
+
+<span class="fc" id="L302">        int count = app.count - this.frameStart;</span>
+
+<span class="fc bfc" id="L304" title="All 4 branches covered.">        if (count &lt;= 150 &amp;&amp; count &gt; 120){</span>
+<span class="fc" id="L305">            app.image(this.explosionCentreSprite, this.x, this.y + 16, 32, 32);</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">            if (top2Wall == false){</span>
+<span class="fc" id="L307">                app.image(this.explosionVerticalSprite, this.x, this.y - 16, 32, 32);</span>
+            }
+<span class="pc bpc" id="L309" title="1 of 6 branches missed.">            if (top2Wall == false &amp;&amp; top1Wall == false &amp;&amp; topBrokenWall == false){</span>
+<span class="nc" id="L310">                app.image(this.explosionVerticalSprite, this.x, this.y - 16, 32, 32);</span>
+<span class="nc" id="L311">                app.image(this.explosionTopSprite, this.x, this.y - 48, 32, 32);</span>
+            }
+<span class="fc bfc" id="L313" title="All 2 branches covered.">            if (bottom2Wall == false){</span>
+<span class="fc" id="L314">                app.image(this.explosionVerticalSprite, this.x, this.y + 48, 32, 32);</span>
+            }
+<span class="fc bfc" id="L316" title="All 6 branches covered.">            if (bottom2Wall == false &amp;&amp; bottom1Wall == false &amp;&amp; bottomBrokenWall == false){</span>
+<span class="fc" id="L317">                app.image(this.explosionVerticalSprite, this.x, this.y + 48, 32, 32);</span>
+<span class="fc" id="L318">                app.image(this.explosionBottomSprite, this.x, this.y + 80, 32, 32);</span>
+            }
+<span class="fc bfc" id="L320" title="All 2 branches covered.">            if (left2Wall == false){</span>
+<span class="fc" id="L321">                app.image(this.explosionHorizontalSprite, this.x - 32, this.y + 16, 32, 32);</span>
+            }
+<span class="pc bpc" id="L323" title="1 of 6 branches missed.">            if (left2Wall == false &amp;&amp; left1Wall == false &amp;&amp; leftBrokenWall == false){</span>
+<span class="fc" id="L324">                app.image(this.explosionHorizontalSprite, this.x - 32, this.y + 16, 32, 32);</span>
+<span class="fc" id="L325">                app.image(this.explosionLeftSprite, this.x - 64, this.y + 16, 32, 32);</span>
+            }
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">            if (right2Wall == false){</span>
+<span class="fc" id="L328">                app.image(this.explosionHorizontalSprite, this.x + 32, this.y + 16, 32, 32);</span>
+            }
+<span class="pc bpc" id="L330" title="1 of 6 branches missed.">            if (right2Wall == false &amp;&amp; right1Wall == false &amp;&amp; rightBrokenWall == false){</span>
+<span class="fc" id="L331">                app.image(this.explosionHorizontalSprite, this.x + 32, this.y + 16, 32, 32);</span>
+<span class="fc" id="L332">                app.image(this.explosionRightSprite, this.x + 64, this.y + 16, 32, 32);</span>
+            }
+<span class="fc bfc" id="L334" title="All 2 branches covered.">        }else if (count &gt; 150){</span>
+<span class="fc" id="L335">                app.loadConfig.bombList.remove(this);</span>
+                
+<span class="fc bfc" id="L337" title="All 2 branches covered.">                for (int i = 0; i &lt; this.removeBrokenWallList.size(); i ++){</span>
+<span class="fc" id="L338">                    app.loadConfig.brokenWallList.remove(this.removeBrokenWallList.get(i));</span>
+                }
+            }
+<span class="fc" id="L341">    }</span>
+
+    public int getX(){
+<span class="fc" id="L344">        return this.x;</span>
+    }
+
+    public int getY(){
+<span class="fc" id="L348">        return this.y;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

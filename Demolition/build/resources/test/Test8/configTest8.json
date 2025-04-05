@@ -1,0 +1,13 @@
+{
+    "levels": [
+      {
+        "path": "./src/test/resources/Test8/map1.txt",
+        "time": 100
+      },
+      {
+        "path": "./src/test/resources/Test8/map2.txt",
+        "time": 100
+      }
+    ],
+    "lives": 3
+  }

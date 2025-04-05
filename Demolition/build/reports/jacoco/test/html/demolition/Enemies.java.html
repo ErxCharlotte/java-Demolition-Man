@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Enemies.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">Enemies.java</span></div><h1>Enemies.java</h1><pre class="source lang-java linenums">package demolition;
+
+import processing.core.*;
+import processing.data.*;
+import java.io.*;
+import java.util.*;
+import java.math.*;
+
+public abstract class Enemies extends Guy{
+<span class="pc" id="L10">    public boolean enemyMoveDown = true;</span>
+<span class="pc" id="L11">    public boolean enemyMoveUp = false;</span>
+<span class="pc" id="L12">    public boolean enemyMoveLeft = false;</span>
+<span class="pc" id="L13">    public boolean enemyMoveRight = false;</span>
+<span class="pc" id="L14">    public boolean canMoveDown = true;</span>
+<span class="pc" id="L15">    public boolean canMoveUp = false;</span>
+<span class="pc" id="L16">    public boolean canMoveLeft = false;</span>
+<span class="pc" id="L17">    public boolean canMoveRight = false;</span>
+<span class="pc" id="L18">    public boolean canMove = true;</span>
+
+    public int nextX;
+    public int nextY;
+<span class="pc" id="L22">    public boolean beKilled = false;</span>
+
+<span class="nc" id="L24">    public Enemies(){</span>
+<span class="nc" id="L25">    }</span>
+
+    public Enemies(int x, int y){
+<span class="fc" id="L28">        super(x, y);</span>
+<span class="fc" id="L29">    }</span>
+
+    //Determine whether can move in a straight line
+    public abstract void enemiesCanMove(App app);
+    
+    public abstract void direction(App app);
+
+    public abstract void removeEnemy(App app);
+    
+    public void tick(App app){
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (app.count % 60 == 0){</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">            if (this.canMove){</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">                if (this.enemyMoveDown == true){</span>
+<span class="fc" id="L42">                    this.y += 32;</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">                }else if (this.enemyMoveUp == true){</span>
+<span class="fc" id="L44">                    this.y -= 32;</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">                }else if (this.enemyMoveRight == true){</span>
+<span class="fc" id="L46">                    this.x += 32;</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">                }else if (this.enemyMoveLeft == true){</span>
+<span class="fc" id="L48">                    this.x -= 32;</span>
+                }
+            }
+        }
+<span class="fc" id="L52">    }</span>
+    
+    //Determine whether the location is same with the BombGuy
+    public void killBombGuy(App app){
+<span class="fc" id="L56">        BombGuy bombGuy = app.bombGuy;</span>
+        /*System.out.println(bombGuy.getX());
+        System.out.println(bombGuy.getY());
+        System.out.println(this.getX());*/
+        
+<span class="fc bfc" id="L61" title="All 4 branches covered.">        if (this.getX() == bombGuy.getX() &amp;&amp; this.getY() == bombGuy.getY()){</span>
+<span class="fc" id="L62">            app.loadConfig.loseLives = true;</span>
+        }
+
+<span class="fc" id="L65">    }</span>
+
+    //Determine whether the location is same with the BOMB
+    public void beKilled(App app){
+<span class="fc" id="L69">        ArrayList&lt;Bomb&gt; bombList = app.loadConfig.bombList;</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        for (int i = 0; i &lt; bombList.size(); i ++){</span>
+<span class="fc" id="L71">            Bomb bomb = bombList.get(i);</span>
+            
+<span class="fc" id="L73">            int count = app.count - bombList.get(i).frameStart;</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            if (count &gt; 150){</span>
+<span class="fc" id="L75">                ArrayList&lt;ArrayList&gt; location = bomb.loadLocation(app);</span>
+                //System.out.println(location.get(0));
+                //System.out.println(location.get(1));
+<span class="fc bfc" id="L78" title="All 2 branches covered.">                for (int u = 0; u &lt; location.get(0).size(); u ++){</span>
+<span class="fc bfc" id="L79" title="All 4 branches covered.">                        if (this.getX() == (int) location.get(0).get(u) &amp;&amp; this.getY() == (int) location.get(1).get(u)){</span>
+<span class="fc" id="L80">                                beKilled = true;</span>
+                        }
+                    }
+            }
+        }
+<span class="fc" id="L85">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
